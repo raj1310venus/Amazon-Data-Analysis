@@ -1,0 +1,61 @@
+Use Case 1: Analyzing Sales Performance of Appliances by Category
+
+SELECT 
+    "Main_Category",
+    SUM("Actual_Price") AS "Total_Sales",
+    COUNT(*) AS "Total_Units_Sold",
+    AVG("Actual_Price") AS "Average_Selling_Price",
+    AVG("Discount_Price") AS "Average_Discounted_Price",
+    SUM("Savings") AS "Total_Savings"
+FROM 
+    public."All_Appliances"
+GROUP BY 
+    "Main_Category"
+ORDER BY 
+    "Total_Sales" DESC;
+
+
+Use Case 2: Analyzing Sales Performance of Air Conditioners by Ratings
+
+SELECT 
+    "ratings",
+    SUM("Actual_Price") AS "Total_Sales",
+    COUNT(*) AS "Total_Units_Sold",
+    AVG("Actual_Price") AS "Average_Selling_Price",
+    AVG("Discount_Price") AS "Average_Discounted_Price",
+    SUM("Savings") AS "Total_Savings"
+FROM 
+    public.air_conditioner
+GROUP BY 
+    "Ratings"
+ORDER BY 
+    "Total_Sales" DESC;
+	
+--Use Case 3: Analyzing Sales Performance of Electronics by Category and Sub-Category
+
+SELECT 
+    "main_category",
+    "sub_category",
+    SUM("actual_price") AS "Total_Sales",
+    COUNT(*) AS "Total_Units_Sold",
+    AVG("actual_price") AS "Average_Selling_Price",
+    AVG("discount_price") AS "Average_Discounted_Price",
+    SUM("savings") AS "Total_Savings"
+FROM 
+    public.air_electronics
+GROUP BY  "main_category", "sub_category"
+ORDER BY  "Total_Sales" DESC;
+
+-- Use Case 4: Find the top 5 best-rated electronic items in each main category.
+
+SELECT e1.main_category, e1.name, e1.ratings
+FROM air_electronics e1
+WHERE e1.ratings = (
+    SELECT MAX(e2.ratings) 
+    FROM air_electronics e2 
+    WHERE e2.main_category = e1.main_category
+    )
+ORDER BY e1.main_category, e1.ratings DESC
+LIMIT 5;
+
+
